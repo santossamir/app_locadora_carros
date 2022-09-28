@@ -39,6 +39,8 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate($this->marca->rules(), $this->marca->feedback());
+
         $marca = $this->marca->create($request->all());
         return response()->json($marca, 201);
     }
@@ -79,9 +81,30 @@ class MarcaController extends Controller
     public function update(Request $request, $id)
     {
         $marca = $this->marca->find($id);
+
         if($marca === null){
             return response()->json(['Erro' => 'Impossível realizar a atualização. O recurso solicitado não existe.'], 404);
         }
+
+        if($request->method() === "PATCH"){
+
+            $regras_dinamicas = array();
+
+            //Percorrendo todas as regras definidas no Model
+            foreach($marca->rules() as $input => $regra ){
+
+                //Coletar apenas as regras aplicáveis aos parâmetros parciais da requisição PATCH
+                if(array_key_exists($input, $request->all())){
+                    $regras_dinamicas[$input] = $regra;
+                }
+            }
+
+            $request->validate($regras_dinamicas, $marca->feedback());
+
+        }else{
+            $request->validate($marca->rules(), $marca->feedback());
+        }
+
         $marca->update($request->all());
         return response()->json($marca, 200);
     }
