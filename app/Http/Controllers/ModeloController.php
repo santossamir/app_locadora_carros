@@ -19,7 +19,7 @@ class ModeloController extends Controller
     public function index()
     {
         //$modelo = $this->modelo->all();
-        return response()->json($this->modelo->all(), 200);
+        return response()->json($this->modelo->with('marca')->get(), 200);
     }
 
     /**
