@@ -13,7 +13,7 @@ class CreateModelosTable extends Migration
      */
     public function up()
     {
-        Schema::create('tb_modelos', function (Blueprint $table) {
+        Schema::create('modelos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('marca_id');
             $table->string('nome', 30);
@@ -25,7 +25,7 @@ class CreateModelosTable extends Migration
             $table->timestamps();
 
             //foreign key (constraints)
-            $table->foreign('marca_id')->references('id')->on('tb_marcas');
+            $table->foreign('marca_id')->references('id')->on('marcas');
         });
     }
 
@@ -36,6 +36,6 @@ class CreateModelosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_modelos');
+        Schema::dropIfExists('modelos');
     }
 }

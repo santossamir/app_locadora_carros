@@ -13,7 +13,7 @@ class CreateCarrosTable extends Migration
      */
     public function up()
     {
-        Schema::create('tb_carros', function (Blueprint $table) {
+        Schema::create('carros', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('modelo_id');
             $table->string('placa', 10)->unique();
@@ -22,7 +22,7 @@ class CreateCarrosTable extends Migration
             $table->timestamps();
 
             //foreign key (constraints)
-            $table->foreign('modelo_id')->references('id')->on('tb_modelos');
+            $table->foreign('modelo_id')->references('id')->on('modelos');
         });
     }
 
@@ -33,6 +33,6 @@ class CreateCarrosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_carros');
+        Schema::dropIfExists('carros');
     }
 }

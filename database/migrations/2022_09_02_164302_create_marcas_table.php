@@ -13,7 +13,7 @@ class CreateMarcasTable extends Migration
      */
     public function up()
     {
-        Schema::create('tb_marcas', function (Blueprint $table) {
+        Schema::create('marcas', function (Blueprint $table) {
             $table->id();
             $table->string('nome', 30)->unique();
             $table->string('imagem', 100)->comment('Logo da marca');
@@ -28,6 +28,6 @@ class CreateMarcasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_marcas');
+        Schema::dropIfExists('marcas');
     }
 }

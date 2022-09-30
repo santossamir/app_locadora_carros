@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use App\Models\Marca;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,8 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        $marcas = $this->marca->all();
-        return "We got here. $marcas";
+        //$marcas = $this->marca->all();
+        return response()->json($this->marca->all(), 200);
     }
 
     /**
@@ -49,10 +50,6 @@ class MarcaController extends Controller
             'imagem' => $imagem_urn
         ]);
 
-        $marca->nome = $request->nome;
-        $marca->imagem = $imagem_urn;
-        $marca->save();
-        
         return response()->json($marca, 201);
     }
 
@@ -112,11 +109,23 @@ class MarcaController extends Controller
 
             $request->validate($regras_dinamicas, $marca->feedback());
 
-        }else{
+        } else {
             $request->validate($marca->rules(), $marca->feedback());
         }
 
-        $marca->update($request->all());
+        //remove o arquivo antigo caso um novo arquivo tenha sido enviado no request
+        if($request->file('imagem')){
+            Storage::disk('public')->delete($marca->imagem);
+        }
+
+        $imagem = $request->file('imagem');
+        $imagem_urn = $imagem->store('imagens', 'public');
+
+        $marca->update([
+            'nome' => $request->nome,
+            'imagem' => $imagem_urn
+        ]);
+
         return response()->json($marca, 200);
     }
 
@@ -129,9 +138,14 @@ class MarcaController extends Controller
     public function destroy($id)
     {
         $marca = $this->marca->find($id);
+
         if($marca === null){
             return response()->json(['Erro' => 'Impossível realizar a exclusão. Dados não existem.'], 404) ;
         }
+
+        //remove o arquivo caso exista
+        Storage::disk('public')->delete($marca->imagem);
+
         $marca->delete();
         return response()->json(["Mensagem" => "Marca removida com sucesso."],200);
     }

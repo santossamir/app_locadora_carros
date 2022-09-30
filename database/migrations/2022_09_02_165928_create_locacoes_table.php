@@ -13,7 +13,7 @@ class CreateLocacoesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tb_locacoes', function (Blueprint $table) {
+        Schema::create('locacoes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('carro_id');
@@ -26,8 +26,8 @@ class CreateLocacoesTable extends Migration
             $table->timestamps();
 
             //foreign key (constraints)
-            $table->foreign('cliente_id')->references('id')->on('tb_clientes');
-            $table->foreign('carro_id')->references('id')->on('tb_carros');
+            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->foreign('carro_id')->references('id')->on('carros');
         });
     }
 
@@ -38,6 +38,6 @@ class CreateLocacoesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_locacaos');
+        Schema::dropIfExists('locacaos');
     }
 }
