@@ -56,7 +56,7 @@ class ModeloController extends Controller
      */
     public function show($id)
     {
-        $modelo = $this->modelo->find($id);
+        $modelo = $this->modelo->with('marca')->find($id);
         if($modelo === null) {
             return response()->json(['erro' => 'Recurso pesquisado não existe'], 404) ;
         }
@@ -71,9 +71,9 @@ class ModeloController extends Controller
      * @param  \App\Models\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Modelo $modelo)
+    public function update(Request $request, $id)
     {
-        //$modelo = $this->modelo->find($id);
+        $modelo = $this->modelo->find($id);
 
         if($modelo === null){
             return response()->json(['Erro' => 'Impossível realizar a atualização. O recurso solicitado não existe.'], 404);
