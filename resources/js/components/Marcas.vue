@@ -3,10 +3,8 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <!--Início card de busca.-->
-                <div class="card mb-4">
-                    <div class="card-header">Buscando Marcas</div>
-
-                    <div class="card-body">
+                <card-component titulo="Busca de marcas">
+                    <template v-slot:conteudo>
                         <div class="row">
                             <div class="col md-3">
                                 <input-container-component titulo="ID" id="inputId" id-help="idHelp" texto-ajuda="Informe o ID da marca.">
@@ -19,54 +17,22 @@
                                 </input-container-component>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card-footer d-grid gap-2 d-md-flex justify-content-md-end">
+                    </template>
+                    <template v-slot:rodape>
                         <button type="submit" class="btn btn-primary btn-sm me-md-2">Pesquisar</button>
-                    </div>
-                </div>
+                    </template>
+                </card-component>
                 <!--Final card de busca.-->
 
                 <!--Início card listagem de marcas.-->
-                <div class="card">
-                    <div class="card-header">Relação de Marcas</div>
-
-                    <div class="card-body">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Handle</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                        <td colspan="2">Larry the Bird</td>
-                                        <td>@twitter</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="card-footer d-grid gap-2 d-md-flex justify-content-md-end">
+                <card-component titulo="Relação de Marcas">
+                    <template v-slot:conteudo>
+                        <table-component></table-component>
+                    </template>
+                    <template v-slot:rodape>
                         <button type="submit" class="btn btn-primary btn-sm me-md-2">Adicionar</button>
-                    </div>
-                </div>
+                    </template>
+                </card-component>
                 <!--Início card listagem de marcas.-->
             </div>
         </div>
