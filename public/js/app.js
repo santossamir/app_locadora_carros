@@ -5459,15 +5459,31 @@ __webpack_require__.r(__webpack_exports__);
       nomeMarca: '',
       arquivoImagem: [],
       transacaoStatus: '',
-      transacaoDetalhes: {}
+      transacaoDetalhes: {},
+      marcas: []
     };
   },
   methods: {
+    carregarLista: function carregarLista() {
+      var _this = this;
+      var config = {
+        headers: {
+          'Accept': 'aplication/json',
+          'Authorization': this.token
+        }
+      };
+      axios.get(this.urlBase, config).then(function (response) {
+        _this.marcas = response.data;
+        console.log(response);
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+    },
     carregarImagem: function carregarImagem(e) {
       this.arquivoImagem = e.target.files;
     },
     salvar: function salvar() {
-      var _this = this;
+      var _this2 = this;
       console.log(this.nomeMarca, this.arquivoImagem);
       var formData = new FormData();
       formData.append('nome', this.nomeMarca);
@@ -5480,18 +5496,21 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.post(this.urlBase, formData, config).then(function (response) {
-        _this.transacaoStatus = 'adicionado';
-        _this.transacaoDetalhes = {
+        _this2.transacaoStatus = 'adicionado';
+        _this2.transacaoDetalhes = {
           mensagem: 'ID do registro: ' + response.data.id
         };
       })["catch"](function (errors) {
-        _this.transacaoStatus = 'erro';
-        _this.transacaoDetalhes = {
+        _this2.transacaoStatus = 'erro';
+        _this2.transacaoDetalhes = {
           mensagem: errors.response.data.message,
           dados: errors.response.data.errors
         };
       });
     }
+  },
+  mounted: function mounted() {
+    this.carregarLista();
   }
 });
 

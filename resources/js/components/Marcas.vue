@@ -63,6 +63,7 @@
                 <button type="button" class="btn btn-primary" @click="salvar()">Salvar</button>
             </template>
         </modal-component>
+        <!--<button type="button" @click="carregarLista()">Teste</button>-->
     </div>
 </template>
 
@@ -87,10 +88,29 @@
                 nomeMarca:'',
                 arquivoImagem:[],
                 transacaoStatus: '',
-                transacaoDetalhes: {}
+                transacaoDetalhes: {},
+                marcas: []
             }
         },
         methods:{
+            carregarLista(){
+
+                let config = {
+                    headers:{
+                        'Accept': 'aplication/json',
+                        'Authorization': this.token
+                    }
+                }
+
+                axios.get(this.urlBase, config)
+                    .then(response => {
+                        this.marcas = response.data
+                        console.log(response);
+                    })
+                    .catch(errors => {
+                        console.log(errors);
+                    })
+            },
             carregarImagem(e){
                 this.arquivoImagem = e.target.files
             },
@@ -124,6 +144,9 @@
                     };
                 })
             }
+        },
+        mounted(){
+            this.carregarLista()
         }
     }
 </script>
