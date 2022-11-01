@@ -27,7 +27,7 @@
                 <!--Início card listagem de marcas.-->
                 <card-component titulo="Relação de Marcas">
                     <template v-slot:conteudo>
-                        <table-component :dados="marcas" :titulos="['ID', 'Nome', 'Imagem']"></table-component>
+                        <table-component :dados="marcas" :titulos="['id', 'nome', 'imagem']"></table-component>
                     </template>
                     <template v-slot:rodape>
                         <button type="submit" class="btn btn-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>
