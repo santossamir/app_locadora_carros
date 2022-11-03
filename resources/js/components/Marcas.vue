@@ -28,7 +28,7 @@
                 <card-component titulo="Relação de Marcas">
                     <template v-slot:conteudo>
                         <table-component
-                            :dados="marcas"
+                            :dados="marcas.data"
                             :titulos="{
                                 id: {titulo:'Id', tipo:'texto'},
                                 nome: {titulo:'Nome', tipo:'texto'},
@@ -38,7 +38,18 @@
                         </table-component>
                     </template>
                     <template v-slot:rodape>
-                        <button type="submit" class="btn btn-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>
+                        <div class="row container-lg">
+                            <div class="col-sm-10">
+                                <paginate-component>
+                                    <li v-for="l, key in marcas.links" :key="key" :class="l.active ? 'page-item active' : 'page-item'" @click="paginacao(l)">
+                                        <a class="page-link" v-html="l.label"></a>
+                                    </li>
+                                </paginate-component>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary btn-sm me-md-2" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>
+                            </div>
+                        </div>
                     </template>
                 </card-component>
                 <!--Final card listagem de marcas.-->
@@ -97,10 +108,16 @@
                 arquivoImagem:[],
                 transacaoStatus: '',
                 transacaoDetalhes: {},
-                marcas: []
+                marcas: { data: [] }
             }
         },
         methods:{
+            paginacao(l){
+                if(l.url){
+                    this.urlBase = l.url
+                    this.carregarLista()
+                }
+            },
             carregarLista(){
 
                 let config = {
@@ -113,7 +130,6 @@
                 axios.get(this.urlBase, config)
                     .then(response => {
                         this.marcas = response.data
-                        console.log(response);
                     })
                     .catch(errors => {
                         console.log(errors);
