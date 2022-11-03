@@ -5545,7 +5545,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['dados', 'titulos']
+  props: ['dados', 'titulos'],
+  computed: {
+    dadosFiltrados: function dadosFiltrados() {
+      var campos = Object.keys(this.titulos);
+      var dadosFiltrados = [];
+      this.dados.map(function (item, chave) {
+        var itemFiltrado = {};
+        campos.forEach(function (campo) {
+          itemFiltrado[campo] = item[campo];
+        });
+        dadosFiltrados.push(itemFiltrado);
+      });
+      return dadosFiltrados;
+    }
+  }
 });
 
 /***/ }),
@@ -5979,7 +5993,24 @@ var render = function render() {
         return [_c("table-component", {
           attrs: {
             dados: _vm.marcas,
-            titulos: ["id", "nome", "imagem"]
+            titulos: {
+              id: {
+                titulo: "Id",
+                tipo: "texto"
+              },
+              nome: {
+                titulo: "Nome",
+                tipo: "texto"
+              },
+              imagem: {
+                titulo: "Logo",
+                tipo: "imagem"
+              },
+              created_at: {
+                titulo: "Data da criação",
+                tipo: "data"
+              }
+            }
           }
         })];
       },
@@ -6185,24 +6216,23 @@ var render = function render() {
   }, [_c("thead", [_c("tr", _vm._l(_vm.titulos, function (t, key) {
     return _c("th", {
       key: key,
-      staticClass: "text-uppercase",
       attrs: {
         scope: "col"
       }
-    }, [_vm._v(_vm._s(t))]);
-  }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dados, function (obj) {
+    }, [_vm._v(_vm._s(t.titulo))]);
+  }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dadosFiltrados, function (obj) {
     return _c("tr", {
-      key: obj.id
-    }, _vm._l(obj, function (valor, chave) {
-      return _vm.titulos.includes(chave) ? _c("td", {
-        key: chave
-      }, [chave == "imagem" ? _c("span", [_c("img", {
+      key: _vm.chave
+    }, _vm._l(obj, function (valor, chaveValor) {
+      return _c("td", {
+        key: chaveValor
+      }, [_vm.titulos[chaveValor].tipo == "texto" ? _c("span", [_vm._v(_vm._s(valor))]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "data" ? _c("span", [_vm._v(_vm._s(valor))]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "imagem" ? _c("span", [_c("img", {
         attrs: {
           src: "/storage/" + valor,
           width: "40",
           height: "40"
         }
-      })]) : _c("span", [_vm._v("\n                        " + _vm._s(valor) + "\n                    ")])]) : _vm._e();
+      })]) : _vm._e()]);
     }), 0);
   }), 0)])]);
 };
