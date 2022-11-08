@@ -5456,31 +5456,56 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       urlBase: 'http://localhost:8000/api/v1/marca',
+      urlPaginacao: '',
+      urlFiltro: '',
       nomeMarca: '',
       arquivoImagem: [],
       transacaoStatus: '',
       transacaoDetalhes: {},
       marcas: {
         data: []
+      },
+      busca: {
+        id: '',
+        nome: ''
       }
     };
   },
   methods: {
+    pesquisar: function pesquisar() {
+      var filtro = '';
+      for (var chave in this.busca) {
+        if (this.busca[chave]) {
+          if (filtro != '') {
+            filtro += ';';
+          }
+          filtro += chave + ':like:' + this.busca[chave];
+        }
+      }
+      if (filtro != '') {
+        this.urlPaginacao = 'page=1';
+        this.urlFiltro = '&filtro=' + filtro;
+      } else {
+        this.urlFiltro = '';
+      }
+      this.carregarLista();
+    },
     paginacao: function paginacao(l) {
       if (l.url) {
-        this.urlBase = l.url;
+        this.urlPaginacao = l.url.split('?')[1];
         this.carregarLista();
       }
     },
     carregarLista: function carregarLista() {
       var _this = this;
+      var url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro;
       var config = {
         headers: {
           'Accept': 'aplication/json',
           'Authorization': this.token
         }
       };
-      axios.get(this.urlBase, config).then(function (response) {
+      axios.get(url, config).then(function (response) {
         _this.marcas = response.data;
       })["catch"](function (errors) {
         console.log(errors);
@@ -5966,12 +5991,27 @@ var render = function render() {
             "texto-ajuda": "Informe o ID da marca."
           }
         }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.busca.id,
+            expression: "busca.id"
+          }],
           staticClass: "form-control",
           attrs: {
             type: "number",
             id: "inputId",
             "aria-describedby": "idHelp",
             placeholder: "ID"
+          },
+          domProps: {
+            value: _vm.busca.id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.$set(_vm.busca, "id", $event.target.value);
+            }
           }
         })])], 1), _vm._v(" "), _c("div", {
           staticClass: "col md-3"
@@ -5983,12 +6023,27 @@ var render = function render() {
             "texto-ajuda": "Informe o nome da marca."
           }
         }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.busca.nome,
+            expression: "busca.nome"
+          }],
           staticClass: "form-control",
           attrs: {
             type: "text",
             id: "inputNome",
             "aria-describedby": "nomeHelp",
             placeholder: "Nome da marca"
+          },
+          domProps: {
+            value: _vm.busca.nome
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.$set(_vm.busca, "nome", $event.target.value);
+            }
           }
         })])], 1)])];
       },
@@ -6000,6 +6055,11 @@ var render = function render() {
           staticClass: "btn btn-primary btn-sm me-md-2",
           attrs: {
             type: "submit"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.pesquisar();
+            }
           }
         }, [_vm._v("Pesquisar")])];
       },
