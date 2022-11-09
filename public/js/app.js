@@ -5472,6 +5472,31 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    remover: function remover() {
+      var _this = this;
+      var confirmacao = confirm('Tem certeza que deseja remover essse registro?');
+      if (!confirmacao) {
+        return false;
+      }
+      var formData = new FormData();
+      formData.append('_method', 'delete');
+      var config = {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': this.token
+        }
+      };
+      var url = this.urlBase + '/' + this.$store.state.item.id;
+      console.log(this.$store.state.transacao);
+      axios.post(url, formData, config).then(function (response) {
+        _this.$store.state.transacao.status = 'sucesso';
+        _this.$store.state.transacao.mensagem = response.data.msg;
+        _this.carregarLista();
+      })["catch"](function (errors) {
+        _this.$store.state.transacao.status = 'erro';
+        _this.$store.state.transacao.mensagem = errors.response.data.erro;
+      });
+    },
     pesquisar: function pesquisar() {
       var filtro = '';
       for (var chave in this.busca) {
@@ -5497,7 +5522,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     carregarLista: function carregarLista() {
-      var _this = this;
+      var _this2 = this;
       var url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro;
       var config = {
         headers: {
@@ -5506,7 +5531,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.get(url, config).then(function (response) {
-        _this.marcas = response.data;
+        _this2.marcas = response.data;
       })["catch"](function (errors) {
         console.log(errors);
       });
@@ -5515,7 +5540,7 @@ __webpack_require__.r(__webpack_exports__);
       this.arquivoImagem = e.target.files;
     },
     salvar: function salvar() {
-      var _this2 = this;
+      var _this3 = this;
       console.log(this.nomeMarca, this.arquivoImagem);
       var formData = new FormData();
       formData.append('nome', this.nomeMarca);
@@ -5528,13 +5553,13 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.post(this.urlBase, formData, config).then(function (response) {
-        _this2.transacaoStatus = 'adicionado';
-        _this2.transacaoDetalhes = {
+        _this3.transacaoStatus = 'adicionado';
+        _this3.transacaoDetalhes = {
           mensagem: 'ID do registro: ' + response.data.id
         };
       })["catch"](function (errors) {
-        _this2.transacaoStatus = 'erro';
-        _this2.transacaoDetalhes = {
+        _this3.transacaoStatus = 'erro';
+        _this3.transacaoDetalhes = {
           mensagem: errors.response.data.message,
           dados: errors.response.data.errors
         };
@@ -5592,9 +5617,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['dados', 'titulos', 'atualizar', 'remover', 'visualizar'],
+  props: ['dados', 'titulos', 'atualizar', 'visualizar', 'remover'],
   methods: {
     setStore: function setStore(obj) {
+      this.$store.state.transacao.status = '';
+      this.$store.state.transacao.mensagem = '';
       this.$store.state.item = obj;
     }
   },
@@ -6086,7 +6113,11 @@ var render = function render() {
               dataBsTarget: "#modalMarcaVisualizar"
             },
             atualizar: true,
-            remover: true,
+            remover: {
+              visivel: true,
+              dataBsToggle: "modal",
+              dataBsTarget: "#modalMarcaRemover"
+            },
             titulos: {
               id: {
                 titulo: "Id",
@@ -6253,7 +6284,7 @@ var render = function render() {
   }), _vm._v(" "), _c("modal-component", {
     attrs: {
       id: "modalMarcaVisualizar",
-      titulo: "Visualizar Marca"
+      titulo: "Visualizar marca"
     },
     scopedSlots: _vm._u([{
       key: "alertas",
@@ -6327,6 +6358,85 @@ var render = function render() {
       },
       proxy: true
     }])
+  }), _vm._v(" "), _c("modal-component", {
+    attrs: {
+      id: "modalMarcaRemover",
+      titulo: "Remover marca"
+    },
+    scopedSlots: _vm._u([{
+      key: "alertas",
+      fn: function fn() {
+        return [_vm.$store.state.transacao.status == "sucesso" ? _c("alert-component", {
+          attrs: {
+            tipo: "success",
+            titulo: "Transação realizada com sucesso!",
+            detalhes: _vm.$store.state.transacao
+          }
+        }) : _vm._e(), _vm._v(" "), _vm.$store.state.transacao.status == "erro" ? _c("alert-component", {
+          attrs: {
+            tipo: "danger",
+            titulo: "Erro na transação.",
+            detalhes: _vm.$store.state.transacao
+          }
+        }) : _vm._e()];
+      },
+      proxy: true
+    }, _vm.$store.state.transacao.status != "sucesso" ? {
+      key: "conteudo",
+      fn: function fn() {
+        return [_c("input-container-component", {
+          attrs: {
+            titulo: "ID"
+          }
+        }, [_c("input", {
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            disabled: ""
+          },
+          domProps: {
+            value: _vm.$store.state.item.id
+          }
+        })]), _vm._v(" "), _c("input-container-component", {
+          attrs: {
+            titulo: "Nome da marca"
+          }
+        }, [_c("input", {
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            disabled: ""
+          },
+          domProps: {
+            value: _vm.$store.state.item.nome
+          }
+        })])];
+      },
+      proxy: true
+    } : null, {
+      key: "rodape",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-secondary",
+          attrs: {
+            type: "button",
+            "data-bs-dismiss": "modal"
+          }
+        }, [_vm._v("Fechar")]), _vm._v(" "), _vm.$store.state.transacao.status != "sucesso" ? _c("button", {
+          staticClass: "btn btn-danger",
+          attrs: {
+            type: "button",
+            "data-bs-dismiss": "modal"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.remover();
+            }
+          }
+        }, [_vm._v("Remover")]) : _vm._e()];
+      },
+      proxy: true
+    }], null, true)
   })], 1);
 };
 var staticRenderFns = [];
@@ -6444,7 +6554,7 @@ var render = function render() {
         scope: "col"
       }
     }, [_vm._v(_vm._s(t.titulo))]);
-  }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover ? _c("th") : _vm._e()], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dadosFiltrados, function (obj) {
+  }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover.visivel ? _c("th") : _vm._e()], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dadosFiltrados, function (obj) {
     return _c("tr", {
       key: _vm.chave
     }, [_vm._l(obj, function (valor, chaveValor) {
@@ -6457,7 +6567,7 @@ var render = function render() {
           height: "40"
         }
       })]) : _vm._e()]);
-    }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover ? _c("td", [_vm.visualizar.visivel ? _c("button", {
+    }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover.visivel ? _c("td", [_vm.visualizar.visivel ? _c("button", {
       staticClass: "btn btn-outline-primary btn-sm",
       attrs: {
         "data-bs-toggle": _vm.visualizar.dataBsToggle,
@@ -6470,8 +6580,17 @@ var render = function render() {
       }
     }, [_vm._v("Visualizar")]) : _vm._e(), _vm._v(" "), _vm.atualizar ? _c("button", {
       staticClass: "btn btn-outline-success btn-sm"
-    }, [_vm._v("Atualizar")]) : _vm._e(), _vm._v(" "), _vm.remover ? _c("button", {
-      staticClass: "btn btn-outline-danger btn-sm"
+    }, [_vm._v("Atualizar")]) : _vm._e(), _vm._v(" "), _vm.remover.visivel ? _c("button", {
+      staticClass: "btn btn-outline-danger btn-sm",
+      attrs: {
+        "data-bs-toggle": _vm.remover.dataBsToggle,
+        "data-bs-target": _vm.remover.dataBsTarget
+      },
+      on: {
+        click: function click($event) {
+          return _vm.setStore(obj);
+        }
+      }
     }, [_vm._v("Remover")]) : _vm._e()]) : _vm._e()], 2);
   }), 0)])]);
 };
@@ -6499,7 +6618,11 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   state: {
-    item: {}
+    item: {},
+    transacao: {
+      status: '',
+      mensagem: ''
+    }
   }
 });
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('example-component', (__webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]));
