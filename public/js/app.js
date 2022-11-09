@@ -6813,6 +6813,10 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0__["default"]({
   \***********************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
+var _require = __webpack_require__(/*! axios */ "./node_modules/axios/index.js"),
+  axios = _require["default"];
+//const { config } = require('vue/types/umd');
+
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 try {
   __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
@@ -6827,12 +6831,6 @@ try {
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
-
 // import Echo from 'laravel-echo';
 
 // window.Pusher = require('pusher-js');
@@ -6843,6 +6841,21 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+axios.interceptors.request.use(function (config) {
+  console.log('Interceptando resquest antes do envio.', config);
+  return config;
+}, function (error) {
+  console.log('Erro na requisição: ', error);
+  return Promise.reject(error);
+});
+axios.interceptors.response.use(function (response) {
+  console.log('Interceptamos a resposta antes da aplicação.', response);
+  return response;
+}, function (error) {
+  console.log('Erro na resposta: ', error);
+  return Promise.reject(error);
+});
 
 /***/ }),
 

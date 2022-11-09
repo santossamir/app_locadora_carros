@@ -1,3 +1,6 @@
+const { default: axios } = require('axios');
+//const { config } = require('vue/types/umd');
+
 window._ = require('lodash');
 
 try {
@@ -14,12 +17,6 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
-
 // import Echo from 'laravel-echo';
 
 // window.Pusher = require('pusher-js');
@@ -30,3 +27,25 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+axios.interceptors.request.use(
+    config => {
+        console.log('Interceptando resquest antes do envio.', config)
+        return config
+    },
+    error => {
+        console.log('Erro na requisição: ', error)
+        return Promise.reject(error)
+    }
+)
+
+axios.interceptors.response.use(
+    response => {
+        console.log('Interceptamos a resposta antes da aplicação.', response)
+        return response
+    },
+    error => {
+        console.log('Erro na resposta: ', error)
+        return Promise.reject(error)
+    }
+)
