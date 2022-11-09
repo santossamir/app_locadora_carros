@@ -6698,7 +6698,7 @@ var render = function render() {
     }, [_vm._l(obj, function (valor, chaveValor) {
       return _c("td", {
         key: chaveValor
-      }, [_vm.titulos[chaveValor].tipo == "texto" ? _c("span", [_vm._v(_vm._s(valor))]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "data" ? _c("span", [_vm._v(_vm._s(valor))]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "imagem" ? _c("span", [_c("img", {
+      }, [_vm.titulos[chaveValor].tipo == "texto" ? _c("span", [_vm._v(_vm._s(valor))]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "data" ? _c("span", [_vm._v(_vm._s(_vm._f("formataDataTempoGlobal")(valor)))]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "imagem" ? _c("span", [_c("img", {
         attrs: {
           src: "/storage/" + valor,
           width: "40",
@@ -6783,6 +6783,23 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('card-component', (__webpa
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('modal-component', (__webpack_require__(/*! ./components/Modal.vue */ "./resources/js/components/Modal.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('alert-component', (__webpack_require__(/*! ./components/Alert.vue */ "./resources/js/components/Alert.vue")["default"]));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('paginate-component', (__webpack_require__(/*! ./components/Paginate.vue */ "./resources/js/components/Paginate.vue")["default"]));
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].filter('formataDataTempoGlobal', function (d) {
+  if (!d) {
+    return '';
+  }
+  d = d.split('T');
+  var data = d[0];
+  var tempo = d[1];
+
+  //Formatando data
+  data = data.split('-');
+  data = data[2] + '-' + data[1] + '-' + data[0];
+
+  //Formatando tempo
+  tempo = tempo.split('.');
+  tempo = tempo[0];
+  return data + '  ' + tempo;
+});
 var app = new vue__WEBPACK_IMPORTED_MODULE_0__["default"]({
   el: '#app',
   store: store
