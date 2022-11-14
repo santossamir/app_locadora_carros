@@ -174,19 +174,7 @@
 
 <script>
     export default{
-        computed:{
-            token(){
 
-                let token = document.cookie.split(';').find(indice =>{
-                    return indice.includes('token=')
-                })
-
-                token = token.split('=')[1]
-                token = 'Bearer ' + token
-
-                return token
-            }
-        },
         data(){
             return{
                 urlBase: 'http://localhost:8000/api/v1/marca',
@@ -217,9 +205,7 @@
 
                 let config = {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Accept': 'appliation/json',
-                        'Authorization': this.token
+                        'Content-Type': 'multipart/form-data'
                     }
                 }
 
@@ -248,17 +234,9 @@
                 let formData = new FormData();
                 formData.append('_method', 'delete')
 
-                let config = {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': this.token
-                    }
-                }
-
                 let url = this.urlBase + '/' + this.$store.state.item.id
 
-                console.log(this.$store.state.transacao);
-                axios.post(url, formData, config)
+                axios.post(url, formData)
                     .then(response => {
                         this.$store.state.transacao.status = 'sucesso'
                         this.$store.state.transacao.mensagem = response.data.msg
@@ -302,14 +280,7 @@
 
                 let url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro;
 
-                let config = {
-                    headers:{
-                        'Accept': 'aplication/json',
-                        'Authorization': this.token
-                    }
-                }
-
-                axios.get(url, config)
+                axios.get(url)
                     .then(response => {
                         this.marcas = response.data
                     })
@@ -329,9 +300,7 @@
 
                 let config = {
                     headers:{
-                        'Content-Type': 'multipart/form-data',
-                        'Accept': 'aplication/json',
-                        'Authorization': this.token
+                        'Content-Type': 'multipart/form-data'
                     }
                 }
 

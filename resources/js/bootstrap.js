@@ -30,6 +30,19 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 axios.interceptors.request.use(
     config => {
+        //Definir para todas as requisições parâmetros de accept e autorization
+        config.headers.Accept = "appliation/json"
+
+        //Recuperando token de autorização dos cookies
+        let token = document.cookie.split(';').find(indice =>{
+            return indice.includes('token=')
+        })
+
+        token = token.split('=')[1]
+        token = 'Bearer ' + token
+
+        config.headers.Authorization = token
+
         console.log('Interceptando resquest antes do envio.', config)
         return config
     },
